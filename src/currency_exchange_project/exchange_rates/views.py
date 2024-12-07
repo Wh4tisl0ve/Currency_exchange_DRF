@@ -1,84 +1,58 @@
+from django.db.utils import DatabaseError
+from django.db.utils import IntegrityError
+
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.exceptions import APIException, NotFound, ParseError
 
 from currencies.models import Currency
 from .models import ExchangeRate
-from .serializer import ExchangeRatesSerializers
+from .serializers import ExchangeRateSerializer
 
 
 class ExchangeRatesList(APIView):
-    serializer_class = ExchangeRatesSerializers
-
     def get(self, request):
-        exchange_rates = ExchangeRate.objects.all()
-        serializer = self.serializer_class(exchange_rates, many=True)
-        return Response(serializer.data)
+        try:
+            exchange_rates = ExchangeRate.objects.all()
+            serializer = ExchangeRateSerializer(exchange_rates, many=True)
+            return Response(serializer.data)
+        except DatabaseError:
+            raise APIException("Внутренняя ошибка сервера")
 
     def post(self, request):
-        base_currency_request = Currency.objects.get(
-            code=request.data.get("baseCurrencyCode")
-        )
-        target_currency_request = Currency.objects.get(
-            code=request.data.get("targetCurrencyCode")
-        )
-        rate_request = request.data.get("rate")
-
-        exchange_rate = ExchangeRate(
-            base_currency=base_currency_request,
-            target_currency=target_currency_request,
-            rate=rate_request,
-        )
-
-        serializer = self.serializer_class(data=exchange_rate)
-
-        if serializer.is_valid():
-            serializer.save()
+        serializer = ExchangeRateSerializer(data=request.data)
+        try:
+            serializer.is_valid(raise_exception=True)
+            exchange_rate = serializer.save()
+            
+            serializer = ExchangeRateSerializer(exchange_rate)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except IntegrityError:
+            return Response(
+                {"detail": "Обменный курс с валютной парой уже существует"},
+                status=status.HTTP_409_CONFLICT,
+            )
+        except DatabaseError:
+            raise APIException("Внутренняя ошибка сервера")
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-class ExchangeRatePairList(APIView):
-    serializer_class = ExchangeRatesSerializers
-
+class ExchangeRatePairDetail(APIView):
     def get(self, request, currency_pair):
-
-        base_currency = Currency.objects.get(code=currency_pair[:3].upper())
-        target_currency = Currency.objects.get(code=currency_pair[3:].upper())
-
         try:
+            base_currency = Currency.objects.get(code=currency_pair[:3].upper())
+            target_currency = Currency.objects.get(code=currency_pair[3:].upper())
+
             exchange_rate = ExchangeRate.objects.get(
-                base_currency=base_currency, target_currency=target_currency
+                base_currency=base_currency,
+                target_currency=target_currency,
             )
+            serializer = ExchangeRateSerializer(exchange_rate)
+
+            return Response(serializer.data)
+        except Currency.DoesNotExist:
+            raise ParseError("Одна из валют валютной пары не существует")
         except ExchangeRate.DoesNotExist:
-            return Response(
-                {"code": 404, "message": "Валюта не найдена"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-        serializer = self.serializer_class(exchange_rate)
-        return Response(serializer.data)
-
-    def patch(self, request, currency_pair):
-        base_currency = Currency.objects.get(code=currency_pair[:3].upper())
-        target_currency = Currency.objects.get(code=currency_pair[3:].upper())
-        rate_request = float(request.data.get("rate"))
-
-        try:
-            exchange_rate = ExchangeRate.objects.get(
-                base_currency=base_currency, target_currency=target_currency
-            )
-        except ExchangeRate.DoesNotExist:
-            return Response(
-                {"code": 404, "message": "Валюта не найдена"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        
-        exchange_rate.rate = rate_request
-        exchange_rate.save()
-
-        serializer = self.serializer_class(exchange_rate)
-
-        return Response(serializer.data)
-
+            raise NotFound("Обменного курса для валютной пары не найдено")
+        except DatabaseError:
+            raise APIException("Внутренняя ошибка сервера")
