@@ -1,9 +1,19 @@
-from django.urls import path
+from django.urls import path, include
 
-from .views import CurrenciesList, CurrencyDetail
+from rest_framework.routers import DefaultRouter
 
+from .views import CurrenciesViewSet
+
+
+router = DefaultRouter()
+router.register(r"currencies", CurrenciesViewSet, basename="currencies")
+router.register(r"currency", CurrenciesViewSet, basename="currency")
 
 urlpatterns = [
-    path("currencies/", CurrenciesList.as_view(), name="currencies"),
-    path("currency/<str:currency_code>", CurrencyDetail.as_view(), name="currency-detail"),
+    path("", include(router.urls)),
+    path(
+        "currency/<str:currency_code>/",
+        CurrenciesViewSet.as_view({"get": "retrive"}),
+        name="currency_by_code",
+    ),
 ]

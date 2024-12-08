@@ -14,10 +14,6 @@ class CurrencySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class CurrencyReadSerializer(CurrencySerializer):
-    pass
-
-
 class CurrencyWriteSerializer(CurrencySerializer):
     full_name = serializers.CharField(required=True)
     sign = serializers.CharField(required=True)
