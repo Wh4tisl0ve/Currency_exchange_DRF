@@ -1,50 +1,32 @@
-from django.db import DatabaseError
-from django.db.utils import IntegrityError
-
-from rest_framework import status
-from rest_framework.views import APIView
+from rest_framework import status, viewsets
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound, APIException
 
 from .models import Currency
-from .serializers import CurrencyReadSerializer, CurrencyWriteSerializer
+from .serializers import CurrencySerializer, CurrencyWriteSerializer
 
 
-class CurrenciesList(APIView):
-    def get(self, request):
-        try:
-            currencies = Currency.objects.all()
-            serializer = CurrencyReadSerializer(currencies, many=True)
+class CurrenciesViewSet(viewsets.ModelViewSet):
+    serializer_class = CurrencySerializer
+    queryset = Currency.objects.all()
+    lookup_field = 'code'
 
-            return Response(serializer.data)
-        except DatabaseError:
-            raise APIException("Внутренняя ошибка сервера")
+    def get_serializer_class(self):
+        if self.action == "create":
+            return CurrencyWriteSerializer
+        return self.serializer_class
 
-    def post(self, request):
-        serializer = CurrencyWriteSerializer(data=request.data)
-        try:
-            serializer.is_valid(raise_exception=True)
-            currency = serializer.save()
-            serializer = CurrencyWriteSerializer(currency)
+    def list(self, request):
+        serializer = self.get_serializer(self.get_queryset(), many=True)
+        return Response(serializer.data)
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except IntegrityError:
-            return Response(
-                {"detail": "Валюта с таким кодом уже существует"},
-                status=status.HTTP_409_CONFLICT,
-            )
+    def create(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
 
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-class CurrencyDetail(APIView):
-    def get(self, request, currency_code):
-        serializer = CurrencyReadSerializer(data={"code": currency_code.upper()})
-        try:
-            serializer.is_valid(raise_exception=True)
-            currency = Currency.objects.get(code=currency_code.upper())
-        except Currency.DoesNotExist:
-            raise NotFound("Валюта с данным кодом не найдена")
-        except DatabaseError:
-            raise APIException("Внутренняя ошибка сервера")
-
-        serializer = CurrencyReadSerializer(currency)
+    def retrieve(self, request, code):
+        currency = self.get_object()
+        serializer = self.get_serializer(currency)
         return Response(serializer.data)
