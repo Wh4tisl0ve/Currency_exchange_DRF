@@ -17,3 +17,8 @@ class CurrencySerializer(serializers.ModelSerializer):
 class CurrencyWriteSerializer(CurrencySerializer):
     FullName = serializers.CharField(required=True)
     Sign = serializers.CharField(required=True)
+
+    def create(self, validated_data):
+        validated_data["Code"] = validated_data["Code"].upper()
+
+        return super().create(validated_data)
