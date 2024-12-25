@@ -28,15 +28,7 @@ class ExchangeRateWriteSerializer(ExchangeRateSerializer):
         fields = "__all__"
 
     def create(self, validated_data):
-        base_currency = validated_data.get("base_currency")
-        target_currency = validated_data.get("target_currency")
-        rate = validated_data.get("rate")
-
-        exchange_rate = ExchangeRate(
-            base_currency=base_currency,
-            target_currency=target_currency,
-            rate=rate,
-        )
+        exchange_rate = ExchangeRate(**validated_data)
         exchange_rate.save()
 
         return exchange_rate
