@@ -1,18 +1,17 @@
-from django.urls import path, include
-
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 
 from .views import ExchangeRateViewSet
 
 
-router = DefaultRouter()
-router.register(r"exchangeRates", ExchangeRateViewSet, basename="exchange_rates")
-
 urlpatterns = [
-    path("", include(router.urls)),
+    path(
+        "exchangeRates/",
+        ExchangeRateViewSet.as_view({"get": "list", "post": "create"}),
+        name="exchange_rates",
+    ),
     path(
         "exchangeRate/<str:currency_pair>/",
         ExchangeRateViewSet.as_view({"get": "retrieve", "patch": "update"}),
-        name="currency_pair",
+        name="exchange_rate_by_currency_pair",
     ),
 ]

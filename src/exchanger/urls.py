@@ -1,12 +1,6 @@
-from django.urls import path, include
-
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 
 from .views import ExchangerView
-
-
-router = DefaultRouter()
-router.register(r"exchange", ExchangerView, basename="exchange_rates")
 
 
 urlpatterns = [
