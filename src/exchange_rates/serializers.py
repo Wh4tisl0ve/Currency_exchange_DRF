@@ -6,6 +6,7 @@ from currencies.serializers import CurrencySerializer
 from currencies.models import Currency
 
 from .models import ExchangeRate
+from .exceptions import ConflictException
 
 
 class ExchangeRateSerializer(serializers.ModelSerializer):
@@ -42,9 +43,7 @@ class ExchangeRateWriteSerializer(ExchangeRateSerializer):
         if ExchangeRate.objects.filter(
             base_currency=base_currency, target_currency=target_currency
         ).exists():
-            raise serializers.ValidationError(
-                "Валютная пара с таким кодом уже существует"
-            )
+            raise ConflictException()
 
         return attrs
 
