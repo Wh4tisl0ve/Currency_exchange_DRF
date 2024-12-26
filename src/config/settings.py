@@ -23,7 +23,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "currencies",
-    "exchange_rates"
+    "exchange_rates",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -97,7 +98,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "ru-ru"
 
 TIME_ZONE = "UTC"
 
@@ -115,3 +116,16 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# settings Django REST Framework
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema', 
+}
+
+# settings drf-spectacular
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'User Management API',                              
+    'DESCRIPTION': 'API for currency exchange service',  
+    'VERSION': '1.0.0',                                           
+    'SERVE_INCLUDE_SCHEMA': False,                                
+}
