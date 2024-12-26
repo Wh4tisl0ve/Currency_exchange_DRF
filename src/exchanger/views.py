@@ -12,25 +12,21 @@ from exchanger.serializers import (
 
 
 class ExchangerView(APIView):
-    exchanger_service = ExchangerService
-    serializer_response_class = ExchangerResponseSerializer
-    serializer_request_class = ExchangerRequestSerializer
-
     def get(self, request):
-        serializer_request = self.serializer_request_class(data=request.GET)
+        serializer_request = ExchangerRequestSerializer(data=request.query_params)
         serializer_request.is_valid(raise_exception=True)
 
         base_currency = get_object_or_404(
-            Currency, Code=request.GET.get("base").upper()
+            Currency, Code=request.query_params.get("base").upper()
         )
         target_currency = get_object_or_404(
-            Currency, Code=request.GET.get("target").upper()
+            Currency, Code=request.query_params.get("target").upper()
         )
 
-        rate_dto = self.exchanger_service().perform_currency_exchange(
-            base_currency, target_currency, request.GET.get("amount")
+        rate_dto = ExchangerService.perform_currency_exchange(
+            base_currency, target_currency, request.query_params.get("amount")
         )
 
-        serializer_response = self.serializer_response_class(rate_dto)
+        serializer_response = ExchangerResponseSerializer(rate_dto)
 
         return Response(serializer_response.data)

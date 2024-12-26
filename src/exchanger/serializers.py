@@ -15,3 +15,4 @@ class ExchangerRequestSerializer(serializers.Serializer):
     base = serializers.CharField(max_length=3)
     target = serializers.CharField(max_length=3)
     amount = serializers.DecimalField(max_digits=10, decimal_places=4)
+    

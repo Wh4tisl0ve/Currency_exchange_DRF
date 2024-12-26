@@ -8,6 +8,7 @@ from .dto import ExchangerResponse
 
 
 class ExchangerService:
+    @classmethod
     def perform_currency_exchange(
         self, base_currency: Currency, target_currency: Currency, amount: float
     ) -> ExchangerResponse:
@@ -21,6 +22,7 @@ class ExchangerService:
             except ExchangeRate.DoesNotExist:
                 return self.__calc_by_cross_rate(base_currency, target_currency, amount)
 
+    @classmethod
     def __calc_by_direct_rate(
         self, base_currency: Currency, target_currency: Currency, amount: float
     ) -> ExchangerResponse:
@@ -34,6 +36,7 @@ class ExchangerService:
             base_currency, target_currency, direct_rate.rate, amount, converted_amount
         )
 
+    @classmethod
     def __calc_by_reverse_rate(
         self, base_currency: Currency, target_currency: Currency, amount: float
     ) -> ExchangerResponse:
@@ -42,13 +45,13 @@ class ExchangerService:
         )
 
         reverse_rate = Decimal(1) / rate.rate
-        print(reverse_rate)
         converted_amount = reverse_rate * Decimal(amount)
 
         return ExchangerResponse(
             base_currency, target_currency, reverse_rate, amount, converted_amount
         )
 
+    @classmethod
     def __calc_by_cross_rate(
         self, base_currency: Currency, target_currency: Currency, amount: float
     ) -> ExchangerResponse:

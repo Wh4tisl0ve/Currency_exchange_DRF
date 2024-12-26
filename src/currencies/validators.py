@@ -9,4 +9,4 @@ class CurrencyCodeValidators:
         return value
 
     def is_currency_code(self, value: str) -> bool:
-        return len(value) == 3 and value.isalpha() and value.isascii()
+        return value.isalpha() and value.isascii()

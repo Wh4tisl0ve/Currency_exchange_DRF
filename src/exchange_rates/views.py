@@ -31,35 +31,12 @@ class ExchangeRateViewSet(
         return Response(serializer.data)
 
     def update(self, request, currency_pair):
-        if "rate" not in request.data:
-            return Response(
-                {"message": "Отсутствует нужное поле формы"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
         exchange_rate = self.get_object(currency_pair)
         serializer = self.get_serializer(exchange_rate, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
         return Response(serializer.data)
-
-    def create(self, request, *args, **kwargs):
-        try:
-            serializer = self.get_serializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-
-            self.perform_create(serializer)
-            headers = self.get_success_headers(serializer.data)
-
-            return Response(
-                serializer.data, status=status.HTTP_201_CREATED, headers=headers
-            )
-        except IntegrityError:
-            return Response(
-                {"message": "Валютная пара с таким кодом уже существует"},
-                status=status.HTTP_409_CONFLICT,
-            )
 
     def get_object(self, currency_pair: str) -> ExchangeRate:
         base_currency = get_object_or_404(Currency, Code=currency_pair[:3].upper())
