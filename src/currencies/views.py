@@ -63,7 +63,7 @@ class CurrencyViewSet(
         description="Получение конкретной валюты по коду. Код должен состоять из 3 латинских букв",
         request=CurrencyWriteSerializer,
         responses={
-            201: CurrencySerializer,
+            200: CurrencySerializer,
             400: OpenApiResponse(description="Неверный формат кода валюты"),
             404: OpenApiResponse(description="Валюта не найдена"),
         },
