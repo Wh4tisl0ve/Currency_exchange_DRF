@@ -119,13 +119,14 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # settings Django REST Framework
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema', 
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "TEST_REQUEST_DEFAULT_FORMAT": "json",
 }
 
 # settings drf-spectacular
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'User Management API',                              
-    'DESCRIPTION': 'API for currency exchange service',  
-    'VERSION': '1.0.0',                                           
-    'SERVE_INCLUDE_SCHEMA': False,                                
+    "TITLE": "User Management API",
+    "DESCRIPTION": "API for currency exchange service",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
