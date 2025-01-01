@@ -7,17 +7,17 @@ from drf_spectacular.views import (
 
 
 urlpatterns = [
-    path("v1/", include("currencies.urls")),
-    path("v1/", include("exchange_rates.urls")),
-    path("v1/", include("exchanger.urls")),
-    path("v1/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("api/v1/", include("currencies.urls")),
+    path("api/v1/", include("exchange_rates.urls")),
+    path("api/v1/", include("exchanger.urls")),
+    path("api/v1/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
-        "v1/schema/swagger-ui/",
+        "api/v1/schema/swagger-ui/",
         SpectacularSwaggerView.as_view(url_name="schema"),
         name="swagger-ui",
     ),
     path(
-        "v1/schema/redoc/",
+        "api/v1/schema/redoc/",
         SpectacularRedocView.as_view(url_name="schema"),
         name="redoc",
     ),
