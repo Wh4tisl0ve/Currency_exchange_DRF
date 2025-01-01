@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:16.0-alpine
+    container_name: dbpostgres
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data/
+    env_file:
+      - ./src/.env
+
+  backend:
+    build:
+      dockerfile: ./Dockerfile
+      context: ./
+    container_name: django_app
+    command: >
+      sh -c "poetry run python manage.py collectstatic --noinput && poetry run python manage.py migrate && poetry run gunicorn config.wsgi:application --bind 0.0.0.0:8000"
+    volumes:
+      - static_volume:/user/static
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    env_file:
+      - ./src/.env
+
+  frontend:
+    build:
+      dockerfile: ./Dockerfile
+      context: ./docker/nginx
+    ports:
+      - 80:80
+    volumes:
+      - static_volume:/user/static
+    container_name: nginx
+    depends_on:
+      - backend
+
+volumes:
+  postgres_volume:
+  static_volume:
