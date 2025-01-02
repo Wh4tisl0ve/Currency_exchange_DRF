@@ -55,7 +55,7 @@ class ExchangerService:
     def __calc_by_cross_rate(
         self, base_currency: Currency, target_currency: Currency, amount: float
     ) -> ExchangerResponse:
-        currency_usd = get_object_or_404(Currency, Code="USD")
+        currency_usd = get_object_or_404(Currency, code="USD")
         usd_base_exchange_rate = get_object_or_404(
             ExchangeRate, base_currency=currency_usd, target_currency=base_currency
         )

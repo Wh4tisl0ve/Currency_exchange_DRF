@@ -37,11 +37,12 @@ class ExchangerView(APIView):
         serializer_request.is_valid(raise_exception=True)
 
         base_currency = get_object_or_404(
-            Currency, Code=request.query_params.get("base").upper()
+            Currency, code=request.query_params.get("base").upper()
         )
         target_currency = get_object_or_404(
-            Currency, Code=request.query_params.get("target").upper()
+            Currency, code=request.query_params.get("target").upper()
         )
+
 
         rate_dto = ExchangerService.perform_currency_exchange(
             base_currency, target_currency, request.query_params.get("amount")

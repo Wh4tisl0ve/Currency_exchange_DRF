@@ -1,8 +1,8 @@
-from django.urls import path
+from django.urls import re_path
 
 from .views import ExchangerView
 
 
 urlpatterns = [
-    path("exchange", ExchangerView.as_view(), name="exchanger"),
+    re_path(r"^exchange$", ExchangerView.as_view(), name="exchanger"),
 ]
