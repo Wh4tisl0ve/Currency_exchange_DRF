@@ -5,7 +5,7 @@ from .views import CurrencyViewSet
 
 urlpatterns = [
     path(
-        "currency/<str:Code>/",
+        "currency/<str:code>/",
         CurrencyViewSet.as_view({"get": "retrieve"}),
         name="currency_by_code",
     ),

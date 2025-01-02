@@ -21,8 +21,8 @@ class CurrencyViewSet(
 ):
     serializer_class = CurrencySerializer
     queryset = Currency.objects.all()
-    lookup_url_kwarg = "Code"
-    lookup_field = "Code__iexact"
+    lookup_url_kwarg = "code"
+    lookup_field = "code__iexact"
 
     def get_serializer_class(self):
         if self.action == "create":

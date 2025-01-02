@@ -5,9 +5,9 @@ from .validators import CurrencyCodeValidators
 
 
 class CurrencySerializer(serializers.ModelSerializer):
-    Code = serializers.CharField(min_length=3, max_length=3, validators=[CurrencyCodeValidators()])
-    FullName = serializers.CharField(max_length=20, required=False)
-    Sign = serializers.CharField(max_length=3, required=False)
+    code = serializers.CharField(min_length=3, max_length=3, validators=[CurrencyCodeValidators()])
+    fullname = serializers.CharField(max_length=20, required=False)
+    sign = serializers.CharField(max_length=3, required=False)
 
     class Meta:
         model = Currency
@@ -15,10 +15,10 @@ class CurrencySerializer(serializers.ModelSerializer):
 
 
 class CurrencyWriteSerializer(CurrencySerializer):
-    FullName = serializers.CharField(max_length=20, required=True)
-    Sign = serializers.CharField(max_length=3, required=True)
+    fullname = serializers.CharField(max_length=20, required=True)
+    sign = serializers.CharField(max_length=3, required=True)
 
     def create(self, validated_data):
-        validated_data["Code"] = validated_data["Code"].upper()
+        validated_data["code"] = validated_data["code"].upper()
 
         return super().create(validated_data)
