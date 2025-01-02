@@ -49,7 +49,10 @@ $(document).ready(function () {
                 const error = JSON.parse(jqXHR.responseText);
                 const toast = $('#api-error-toast');
 
-                errorMessage = JSON.stringify(error, null, 2);
+                let errorMessage = '';
+                for (const [key, value] of Object.entries(error)) {
+                    errorMessage += `<b>${key}</b>: ${value}<br>`; // Используем <br> для переноса строк
+                }
                 $(toast).find('.toast-body').html(errorMessage);
                 toast.toast("show");
             }
@@ -72,8 +75,11 @@ $(document).ready(function () {
                 const error = JSON.parse(jqXHR.responseText);
                 const toast = $('#api-error-toast');
 
-                errorMessage = JSON.stringify(error, null, 2);
-                $(toast).find('.toast-body').html(errorMessage); 
+                let errorMessage = '';
+                for (const [key, value] of Object.entries(error)) {
+                    errorMessage += `<b>${key}</b>: ${value}<br>`; // Используем <br> для переноса строк
+                }
+                $(toast).find('.toast-body').html(errorMessage);
                 toast.toast("show");
             }
         });
@@ -106,8 +112,11 @@ $(document).ready(function () {
                 const error = JSON.parse(jqXHR.responseText);
                 const toast = $('#api-error-toast');
 
-                errorMessage = JSON.stringify(error, null, 2);
-                $(toast).find('.toast-body').html(errorMessage); 
+                let errorMessage = '';
+                for (const [key, value] of Object.entries(error)) {
+                    errorMessage += `<b>${key}</b>: ${value}<br>`; // Используем <br> для переноса строк
+                }
+                $(toast).find('.toast-body').html(errorMessage);
                 toast.toast("show");
             }
         });
@@ -142,7 +151,10 @@ $(document).ready(function () {
                 const error = JSON.parse(jqXHR.responseText);
                 const toast = $('#api-error-toast');
 
-                errorMessage = JSON.stringify(error, null, 2);
+                let errorMessage = '';
+                for (const [key, value] of Object.entries(error)) {
+                    errorMessage += `<b>${key}</b>: ${value}<br>`; // Используем <br> для переноса строк
+                }
                 $(toast).find('.toast-body').html(errorMessage);
                 toast.toast("show");
             }
@@ -165,7 +177,10 @@ $(document).ready(function () {
                 const error = JSON.parse(jqXHR.responseText);
                 const toast = $('#api-error-toast');
 
-                errorMessage = JSON.stringify(error, null, 2);
+                let errorMessage = '';
+                for (const [key, value] of Object.entries(error)) {
+                    errorMessage += `<b>${key}</b>: ${value}<br>`; // Используем <br> для переноса строк
+                }
                 $(toast).find('.toast-body').html(errorMessage);
                 toast.toast("show");
             }
@@ -191,7 +206,10 @@ $(document).ready(function () {
                 const error = JSON.parse(jqXHR.responseText);
                 const toast = $('#api-error-toast');
 
-                errorMessage = JSON.stringify(error, null, 2);
+                let errorMessage = '';
+                for (const [key, value] of Object.entries(error)) {
+                    errorMessage += `<b>${key}</b>: ${value}<br>`; // Используем <br> для переноса строк
+                }
                 $(toast).find('.toast-body').html(errorMessage);
                 toast.toast("show");
             }
