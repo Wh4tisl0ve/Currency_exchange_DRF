@@ -54,7 +54,7 @@ class ExchangeRateWriteSerializer(ExchangeRateSerializer):
         return exchange_rate
 
     def validate_baseCurrencyCode(self, value):
-        return get_object_or_404(Currency, Code=value.upper())
+        return get_object_or_404(Currency, code=value.upper())
 
     def validate_targetCurrencyCode(self, value):
-        return get_object_or_404(Currency, Code=value.upper())
+        return get_object_or_404(Currency, code=value.upper())

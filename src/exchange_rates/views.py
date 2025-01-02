@@ -89,8 +89,8 @@ class ExchangeRateViewSet(
         return Response(serializer.data)
 
     def get_object(self, currency_pair: str) -> ExchangeRate:
-        base_currency = get_object_or_404(Currency, Code=currency_pair[:3].upper())
-        target_currency = get_object_or_404(Currency, Code=currency_pair[3:].upper())
+        base_currency = get_object_or_404(Currency, code=currency_pair[:3].upper())
+        target_currency = get_object_or_404(Currency, code=currency_pair[3:].upper())
 
         exchange_rate = get_object_or_404(
             ExchangeRate, base_currency=base_currency, target_currency=target_currency
