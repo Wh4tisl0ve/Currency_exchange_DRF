@@ -22,9 +22,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "drf_spectacular",
+    "corsheaders",
     "currencies",
     "exchange_rates",
-    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -35,6 +36,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -122,6 +124,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
+    "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
 }
 
 # settings drf-spectacular
@@ -129,8 +132,6 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "User Management API",
     "DESCRIPTION": "API for currency exchange service",
     "VERSION": "1.0.0",
-    "SWAGGER_UI_SETTINGS": {
-        "docExpansion": "none",
-    },
-    "SECURITY": [{"basicAuth": []}],
 }
+
+CORS_ALLOWED_ORIGINS = ("http://localhost:80", "http://localhost")
